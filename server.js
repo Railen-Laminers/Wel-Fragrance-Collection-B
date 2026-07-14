@@ -14,37 +14,33 @@ const auditLogsRoutes = require("./routes/auditLogs");
 
 const app = express();
 
-// Allowed origins (includes your env variable for flexibility)
 const allowedOrigins = [
   process.env.FRONTEND_URL,
   "https://wel-fragrance-collection.vercel.app",
   "http://localhost:5173",
   "http://localhost:3000",
-].filter(Boolean); // Removes any undefined values
+].filter(Boolean);
 
 const corsOptions = {
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps, curl, or server-to-server)
     if (!origin) return callback(null, true);
-
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error(`CORS blocked: ${origin} not allowed`)); // Explicit error
+      callback(new Error(`CORS blocked: ${origin} not allowed`));
     }
   },
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
-  credentials: true, // Keep this. Even though you use Authorization header, it's harmless and safe.
+  credentials: true,
 };
 
-// Apply CORS globally
+// This ONE middleware handles CORS for ALL routes, including OPTIONS
 app.use(cors(corsOptions));
 
-// Explicitly handle preflight requests (optional, but guarantees OPTIONS are caught)
-app.options("*", cors(corsOptions));
+// ❌ REMOVE this line – it causes the crash
+// app.options("*", cors(corsOptions));
 
-// The rest of your middleware
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(express.static(path.join(__dirname, "public")));
