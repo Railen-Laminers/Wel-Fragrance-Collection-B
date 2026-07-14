@@ -38,8 +38,6 @@ const corsOptions = {
 // This ONE middleware handles CORS for ALL routes, including OPTIONS
 app.use(cors(corsOptions));
 
-// ❌ REMOVE this line – it causes the crash
-// app.options("*", cors(corsOptions));
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
