@@ -12,6 +12,11 @@ const statsRoutes = require("./routes/stats");
 const notificationRoutes = require("./routes/notifications");
 const auditLogsRoutes = require("./routes/auditLogs");
 
+// **Optional**: you can also add DNS fix here, but it's already in emailService.js.
+// If you want to be absolutely sure, you can also add it here:
+// const dns = require('dns');
+// dns.setDefaultResultOrder('ipv4first');
+
 const app = express();
 
 const allowedOrigins = [
@@ -38,7 +43,6 @@ const corsOptions = {
 // This ONE middleware handles CORS for ALL routes, including OPTIONS
 app.use(cors(corsOptions));
 
-
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(express.static(path.join(__dirname, "public")));
@@ -62,6 +66,15 @@ app.use("/api/admin/audit-logs", auditLogsRoutes);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+// Optional: verify email connection on startup
+const { verifyEmailConnection } = require("./services/emailService");
+verifyEmailConnection()
+  .then(ok => {
+    if (ok) console.log("✅ SMTP ready for production");
+    else console.warn("⚠️ SMTP is not available – check your environment variables");
+  })
+  .catch(err => console.error("SMTP verification error:", err.message));

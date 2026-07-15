@@ -1,4 +1,8 @@
 const nodemailer = require("nodemailer");
+const dns = require("dns");
+
+// Force Node.js to resolve DNS to IPv4 first – this prevents ENETUNREACH on Render
+dns.setDefaultResultOrder('ipv4first');
 
 // Create transporter
 const createTransporter = () => {
@@ -26,7 +30,7 @@ const createTransporter = () => {
     connectionTimeout: 10000,
     greetingTimeout: 10000,
     socketTimeout: 10000,
-    family: 4, // Force IPv4 to avoid Render/IPv6 ENETUNREACH issues
+    family: 4, // explicit IPv4 – works as a backup
   });
 };
 
