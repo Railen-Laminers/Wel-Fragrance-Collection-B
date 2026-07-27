@@ -11,6 +11,7 @@ const productRoutes = require("./routes/products");
 const statsRoutes = require("./routes/stats");
 const notificationRoutes = require("./routes/notifications");
 const auditLogsRoutes = require("./routes/auditLogs");
+const faqRoutes = require("./routes/faqs");
 
 // **Optional**: you can also add DNS fix here, but it's already in emailService.js.
 // If you want to be absolutely sure, you can also add it here:
@@ -63,6 +64,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/admin/stats", statsRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/admin/audit-logs", auditLogsRoutes);
+app.use("/api/faqs", faqRoutes);
 
 const PORT = process.env.PORT || 5000;
 
